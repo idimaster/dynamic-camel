@@ -4,7 +4,6 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.5.RELEASE")
-        classpath("io.hawt:hawtio-springboot:2.5.0")
     }
 }
 
@@ -28,5 +27,9 @@ targetCompatibility = 1.8
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile("io.hawt:hawtio-springboot:2.5.0")
+    compile("org.apache.camel:camel-spring-boot-dependencies:2.23.1")
+    compile("org.apache.camel:camel-spring-boot-starter:2.23.1")
     testCompile("junit:junit")
 }
