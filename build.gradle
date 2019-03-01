@@ -31,5 +31,6 @@ dependencies {
     compile("io.hawt:hawtio-springboot:2.5.0")
     compile("org.apache.camel:camel-spring-boot-dependencies:2.23.1")
     compile("org.apache.camel:camel-spring-boot-starter:2.23.1")
+    compile("org.apache.camel:camel-stream-starter:2.23.1")
     testCompile("junit:junit")
 }
