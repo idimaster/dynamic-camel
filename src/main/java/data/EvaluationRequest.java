@@ -1,6 +1,8 @@
 package data;
 
 public class EvaluationRequest {
+    private String domain;
+    private String policy;
     private String authId;
     private String sessionId;
     private String email;
@@ -39,5 +41,21 @@ public class EvaluationRequest {
 
     public String getTrueIP() {
         return trueIP;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public String getPolicy() {
+        return policy;
+    }
+
+    public void setPolicy(String policy) {
+        this.policy = policy;
     }
 }
