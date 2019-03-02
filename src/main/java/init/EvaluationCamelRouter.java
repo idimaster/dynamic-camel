@@ -11,10 +11,17 @@ public class EvaluationCamelRouter extends RouteBuilder {
     public static final String ROUTE_NAME = "direct:evaluateMain";
 
     @Override
-    public void configure() throws Exception {
+    public void configure() {
+        onException(Exception.class)
+                .handled(true)
+                .setBody().constant(new EvaluationResponse(UUID.randomUUID(), "42"));
+
         from(ROUTE_NAME)
                 .routeId("MainEvaluationFlow")
-                .setBody().constant(new EvaluationResponse(UUID.randomUUID()))
+                .recipientList(simple("direct:${body.domain}"));
+
+        from("direct:test1")
+                .setBody().constant(new EvaluationResponse(UUID.randomUUID(), "44"))
                 .end();
     }
 }

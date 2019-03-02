@@ -10,6 +10,11 @@ public class EvaluationResponse {
         this.id = id;
     }
 
+    public EvaluationResponse(UUID id, String action) {
+        this.id = id;
+        this.action = action;
+    }
+
     public UUID getId() {
         return id;
     }
