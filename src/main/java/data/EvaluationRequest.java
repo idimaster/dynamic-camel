@@ -58,4 +58,16 @@ public class EvaluationRequest {
     public void setPolicy(String policy) {
         this.policy = policy;
     }
+
+    @Override
+    public String toString() {
+        return "EvaluationRequest{" +
+                "domain='" + domain + '\'' +
+                ", policy='" + policy + '\'' +
+                ", authId='" + authId + '\'' +
+                ", sessionId='" + sessionId + '\'' +
+                ", email='" + email + '\'' +
+                ", trueIP='" + trueIP + '\'' +
+                '}';
+    }
 }

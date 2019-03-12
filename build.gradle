@@ -37,5 +37,6 @@ dependencies {
     compile("org.apache.camel:camel-swagger-java-starter:2.23.1") {
         exclude group: 'org.hibernate', module: 'hibernate-validator'
     }
+    compile("org.apache.camel:camel-http4:2.23.1")
     testCompile("junit:junit")
 }

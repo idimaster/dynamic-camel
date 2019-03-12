@@ -2,11 +2,17 @@ package init;
 
 import data.EvaluationRequest;
 import data.EvaluationResponse;
+import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
+import org.apache.camel.spi.DataFormat;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
+
+import static org.apache.camel.LoggingLevel.ERROR;
 
 @Component
 public class EvaluationCamelRouter extends RouteBuilder {
@@ -23,18 +29,28 @@ public class EvaluationCamelRouter extends RouteBuilder {
 
         onException(Exception.class)
                 .handled(true)
-                .setBody().constant(new EvaluationResponse(UUID.randomUUID(), "42"));
+                .log(ERROR, "Exception: ${exception.message}")
+                .log(ERROR, "${exception.stacktrace}")
+                .setBody().constant(new EvaluationResponse(UUID.randomUUID(), "42, almost error"));
 
         from(ROUTE_NAME)
                 .routeId("MainEvaluationFlow")
-                .recipientList(simple("direct:${body.domain}"));
+                .recipientList(simple("direct:${body.domain}")).ignoreInvalidEndpoints();
 
         from("direct:test1")
-                .setBody().constant(new EvaluationResponse(UUID.randomUUID(), "44"))
+                .routeId("Domain1")
+                .log("Msg: ${body}")
+                .setHeader(Exchange.HTTP_METHOD,simple("POST"))
+                .marshal().json(JsonLibrary.Jackson)
+                .enrich("http4:localhost:8080/s1/check?bridgeEndpoint=true")
+                .log("Msg: ${body}")
+                //.setBody().constant(new EvaluationResponse(UUID.randomUUID(), "PASS 1"))
                 .end();
 
         from("direct:test2")
-                .setBody().constant(new EvaluationResponse(UUID.randomUUID(), "45"))
+                .routeId("Domain2")
+                .log("Msg: ${body}")
+                .setBody().constant(new EvaluationResponse(UUID.randomUUID(), "PASS 2"))
                 .end();
 
         rest("v2")
