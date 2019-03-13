@@ -38,5 +38,6 @@ dependencies {
         exclude group: 'org.hibernate', module: 'hibernate-validator'
     }
     compile("org.apache.camel:camel-http4:2.23.1")
+    compile("org.apache.camel:camel-mvel:2.23.1")
     testCompile("junit:junit")
 }

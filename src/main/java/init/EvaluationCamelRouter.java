@@ -6,8 +6,6 @@ import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.apache.camel.model.rest.RestBindingMode;
-import org.apache.camel.spi.DataFormat;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -40,11 +38,27 @@ public class EvaluationCamelRouter extends RouteBuilder {
         from("direct:test1")
                 .routeId("Domain1")
                 .log("Msg: ${body}")
-                .setHeader(Exchange.HTTP_METHOD,simple("POST"))
-                .marshal().json(JsonLibrary.Jackson)
-                .enrich("http4:localhost:8080/s1/check?bridgeEndpoint=true")
+                .setHeader(Exchange.HTTP_METHOD, simple("POST"))
+                .enrichWith("direct:test1enrich1").message((oldOne, newOne) -> {
+                    if (oldOne == null) {
+                        return newOne;
+                    }
+
+                    oldOne.setHeader("Enrich1", newOne);
+                    return oldOne;
+                })
                 .log("Msg: ${body}")
                 //.setBody().constant(new EvaluationResponse(UUID.randomUUID(), "PASS 1"))
+                .end();
+
+        from("direct:test1enrich1")
+                .routeId("Domain1_Enrich")
+                .log("Msg: ${body}")
+                .transform().mvel("new data.EnrichRequest(request.body.sessionId)")
+                .log("Msg: ${body}")
+                .marshal().json(JsonLibrary.Jackson)
+                .enrich("http4:localhost:8080/s2/enrich?bridgeEndpoint=true")
+                .unmarshal().json(JsonLibrary.Jackson)
                 .end();
 
         from("direct:test2")

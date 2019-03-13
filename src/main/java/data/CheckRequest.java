@@ -4,6 +4,14 @@ public class CheckRequest {
     private String name;
     private String value;
 
+    public CheckRequest() {
+    }
+
+    public CheckRequest(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
+
     public String getName() {
         return name;
     }
